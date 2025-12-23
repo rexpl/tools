@@ -34,22 +34,24 @@ if (import.meta.server) {
 let fireIconTimerId: number;
 const FIRE_ICON_DELAY = 250;
 
+const invalidField = ref<'none' | 'base64' | 'raw'>('none');
+
 const base64 = ref('');
 const base64Invalid = ref(false);
 function decodeBase64ToText(): void {
     window.clearTimeout(fireIconTimerId);
+    invalidField.value = 'none';
 
     if (base64.value === '') {
-        base64Invalid.value = false;
+        rawtext.value = '';
         return;
     }
 
     try {
         rawtext.value = window.atob(base64.value);
-        base64Invalid.value = false;
     } catch (_) {
         fireIconTimerId = window.setTimeout(() => { error('Invalid base 64 input.'); }, FIRE_ICON_DELAY);
-        base64Invalid.value = true;
+        invalidField.value = 'base64';
     }
 }
 
@@ -62,9 +64,10 @@ const rawtext = ref('');
 const rawtextInvalid = ref(false);
 function encodeTextToBase64(): void {
     window.clearTimeout(fireIconTimerId);
+    invalidField.value = 'none';
 
     if (rawtext.value === '') {
-        rawtextInvalid.value = false;
+        base64.value = '';
         return;
     }
 
@@ -72,10 +75,9 @@ function encodeTextToBase64(): void {
     // apparently yes: https://developer.mozilla.org/en-US/docs/Web/API/Window/btoa#exceptions
     try {
         base64.value = window.btoa(rawtext.value);
-        rawtextInvalid.value = false;
     } catch (_) {
         fireIconTimerId = window.setTimeout(() => { error('Invalid text input.'); }, FIRE_ICON_DELAY);
-        rawtextInvalid.value = true;
+        invalidField.value = 'raw';
     }
 }
 </script>
@@ -93,7 +95,7 @@ function encodeTextToBase64(): void {
                     <div class="w-full h-full p-0.5">
                         <textarea
                             class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
-                            :class="base64Invalid ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
+                            :class="invalidField === 'base64' ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
                             placeholder="Base 64 data"
                             v-model="base64"
                             @input="decodeBase64ToText"
@@ -105,7 +107,7 @@ function encodeTextToBase64(): void {
                     <div class="w-full h-full p-0.5">
                         <textarea
                             class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
-                            :class="rawtextInvalid ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
+                            :class="invalidField === 'raw' ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
                             placeholder="Decoded data"
                             v-model="rawtext"
                             @input="encodeTextToBase64"
