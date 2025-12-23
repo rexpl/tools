@@ -2,3 +2,30 @@
 @plugin "@tailwindcss/forms";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Floating Vue tooltip base */
+/* Tooltip container */
+.v-popper--theme-tooltip .v-popper__inner {
+    @apply rounded px-2 py-1 text-xs shadow border;
+}
+
+/* Light mode */
+:root .v-popper--theme-tooltip .v-popper__inner {
+    @apply bg-white text-slate-900 border-slate-200;
+}
+
+/* Dark mode */
+.dark .v-popper--theme-tooltip .v-popper__inner {
+    @apply bg-slate-900 text-slate-100 border-slate-700;
+}
+
+/* Arrow – BOTH layers */
+.v-popper--theme-tooltip .v-popper__arrow-inner,
+.v-popper--theme-tooltip .v-popper__arrow-outer {
+    @apply bg-white dark:bg-slate-900;
+}
+
+/* Arrow border */
+.v-popper--theme-tooltip .v-popper__arrow-outer {
+    @apply border border-slate-200 dark:border-slate-700;
+}

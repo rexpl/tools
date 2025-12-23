@@ -7,7 +7,10 @@ export default defineNuxtConfig({
         enabled: true,
     },
 
-    css: ['/assets/css/main.css'],
+    css: [
+        '/assets/css/main.css',
+        'floating-vue/dist/style.css',
+    ],
 
     app: {
         buildAssetsDir: '/build/'
