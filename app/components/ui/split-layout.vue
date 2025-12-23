@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
     minPx: 80,
 });
 
-const savedRawSettings = props.localStorage !== null
+const savedRawSettings = props.localStorage !== null && typeof localStorage !== "undefined"
     ? localStorage.getItem(props.localStorage)
     : null;
 
