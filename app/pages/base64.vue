@@ -2,7 +2,7 @@
 import ToolHeader from "~/components/tool-header.vue";
 import ToolHeaderHighlight from "~/components/tool-header-highlight.vue";
 import SplitLayout from "~/components/ui/split-layout.vue";
-import {onMounted} from "vue";
+import {watch, ref} from "vue";
 import {baseUrl, makeTitle} from "~~/src/constants";
 import logo from "~/assets/img/logo.png";
 
@@ -31,18 +31,42 @@ if (import.meta.server) {
 }
 
 const base64 = ref('');
-const rawtext = ref('');
+const base64Invalid = ref(false);
+function decodeBase64ToText(): void {
+    if (base64.value === '') {
+        base64Invalid.value = false;
+        return;
+    }
+
+    try {
+        rawtext.value = window.atob(base64.value);
+        base64Invalid.value = false;
+    } catch (_) {
+        base64Invalid.value = true;
+    }
+}
 
 const base64Input = ref<HTMLInputElement>();
-onMounted(() => {
+watch(base64Input, () => { // on mount not working idk why, maybe because of ClientOnly ?
     base64Input.value?.focus();
 });
 
-function decode(value: string): string {
-    return window.atob(value);
-}
-function encode(value: string): string {
-    return window.btoa(value);
+const rawtext = ref('');
+const rawtextInvalid = ref(false);
+function encodeTextToBase64(): void {
+    if (rawtext.value === '') {
+        rawtextInvalid.value = false;
+        return;
+    }
+
+    // can the input be invalid ...?
+    // apparently yes: https://developer.mozilla.org/en-US/docs/Web/API/Window/btoa#exceptions
+    try {
+        base64.value = window.btoa(rawtext.value);
+        rawtextInvalid.value = false;
+    } catch (_) {
+        rawtextInvalid.value = true;
+    }
 }
 </script>
 
@@ -56,12 +80,27 @@ function encode(value: string): string {
         <div class="w-full h-[calc(100vh-137px)]">
             <SplitLayout local-storage="layout:base64" :initial-ratio="0.40">
                 <template #first>
-                <textarea id="message" rows="4" class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-heading text-sm rounded-md focus:ring-0 block w-full h-full p-3 shadow-xs"
-                          placeholder="Base 64 data" v-model="base64" @input="rawtext = decode(base64)" ref="base64Input"></textarea>
+                    <div class="w-full h-full p-0.5">
+                        <textarea
+                            class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
+                            :class="base64Invalid ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
+                            placeholder="Base 64 data"
+                            v-model="base64"
+                            @input="decodeBase64ToText"
+                            ref="base64Input"
+                        ></textarea>
+                    </div>
                 </template>
                 <template #second>
-                <textarea id="message" rows="4" class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-heading text-sm rounded-md focus:ring-0 block w-full h-full p-3 shadow-xs"
-                          placeholder="Decoded data" v-model="rawtext" @input="base64 = encode(rawtext)"></textarea>
+                    <div class="w-full h-full p-0.5">
+                        <textarea
+                            class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
+                            :class="rawtextInvalid ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
+                            placeholder="Decoded data"
+                            v-model="rawtext"
+                            @input="encodeTextToBase64"
+                        ></textarea>
+                    </div>
                 </template>
             </SplitLayout>
         </div>
