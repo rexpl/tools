@@ -5,6 +5,7 @@ import SplitLayout from "~/components/ui/split-layout.vue";
 import {watch, ref} from "vue";
 import {baseUrl, makeTitle} from "~~/src/constants";
 import logo from "~/assets/img/logo.png";
+import {error} from "~~/src/toasts";
 
 const title = 'Base 64';
 const description = 'Provides basic base 64 encoding/decoding with live editing.';
@@ -30,9 +31,14 @@ if (import.meta.server) {
     });
 }
 
+let fireIconTimerId: number;
+const FIRE_ICON_DELAY = 250;
+
 const base64 = ref('');
 const base64Invalid = ref(false);
 function decodeBase64ToText(): void {
+    window.clearTimeout(fireIconTimerId);
+
     if (base64.value === '') {
         base64Invalid.value = false;
         return;
@@ -42,6 +48,7 @@ function decodeBase64ToText(): void {
         rawtext.value = window.atob(base64.value);
         base64Invalid.value = false;
     } catch (_) {
+        fireIconTimerId = window.setTimeout(() => { error('Invalid base 64 input.'); }, FIRE_ICON_DELAY);
         base64Invalid.value = true;
     }
 }
@@ -54,6 +61,8 @@ watch(base64Input, () => { // on mount not working idk why, maybe because of Cli
 const rawtext = ref('');
 const rawtextInvalid = ref(false);
 function encodeTextToBase64(): void {
+    window.clearTimeout(fireIconTimerId);
+
     if (rawtext.value === '') {
         rawtextInvalid.value = false;
         return;
@@ -65,6 +74,7 @@ function encodeTextToBase64(): void {
         base64.value = window.btoa(rawtext.value);
         rawtextInvalid.value = false;
     } catch (_) {
+        fireIconTimerId = window.setTimeout(() => { error('Invalid text input.'); }, FIRE_ICON_DELAY);
         rawtextInvalid.value = true;
     }
 }
