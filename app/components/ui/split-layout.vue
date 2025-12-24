@@ -38,18 +38,18 @@ function getRect() {
 }
 
 let pointerId: number | null = null;
+let dragHandleEl: HTMLElement | null = null;
 
-const dragStart = {
-    // Pointer coordinate (clientX/clientY) at the moment dragging begins.
-    clientX: 0,
-    clientY: 0,
-    // Ratio at the moment dragging begins.
-    ratio: 0,
-    // Cached rect and total size at drag start (helps consistency during drag).
-    rect: null as DOMRect | null,
-    // Total pixels in the drag axis (width for vertical split, height for horizontal split).
-    total: 0,
-};
+let dragPending: boolean = false;
+
+let downX = 0;
+let downY = 0;
+const DRAG_THRESHOLD_PX = 4;
+
+let clientX: number = 0;
+let clientY: number = 0;
+let dragStartRatio: number = 0;
+let totalDragAxisPixels: number = 0;
 
 function onPointerDown(e: PointerEvent) {
     // Only left click / primary pointer (optional, but avoids weird right-click drags).
@@ -64,17 +64,18 @@ function onPointerDown(e: PointerEvent) {
 
     // Capture the pointer on the handle so moves keep flowing to us.
     pointerId = e.pointerId;
-    (e.currentTarget as HTMLElement).setPointerCapture(pointerId);
+    dragHandleEl = e.currentTarget as HTMLElement;
 
     // Mark dragging active (shows overlay in template).
-    dragging.value = true;
+    dragPending = true;
+    downX = e.clientX;
+    downY = e.clientY;
 
     // Cache drag start info.
-    dragStart.clientX = e.clientX;
-    dragStart.clientY = e.clientY;
-    dragStart.ratio = ratio.value;
-    dragStart.rect = rect;
-    dragStart.total = horizontal.value ? rect.height : rect.width;
+    clientX = e.clientX;
+    clientY = e.clientY;
+    dragStartRatio = ratio.value;
+    totalDragAxisPixels = horizontal.value ? rect.height : rect.width;
 
     // Set cursor globally for nicer UX and to avoid accidental text selection.
     document.documentElement.style.cursor = horizontal.value ? "row-resize" : "col-resize";
@@ -85,20 +86,31 @@ function onPointerDown(e: PointerEvent) {
 }
 
 function onPointerMove(e: PointerEvent) {
+    if (dragPending) {
+        const dx = Math.abs(e.clientX - downX);
+        const dy = Math.abs(e.clientY - downY);
+        if (Math.max(dx, dy) < DRAG_THRESHOLD_PX) {
+            return;
+        }
+
+        dragging.value = true;
+        dragPending = false;
+
+        dragHandleEl!.setPointerCapture(pointerId!);
+    }
+
     // Prevent scrolling on touch devices while dragging.
     e.preventDefault();
 
-    const rect = dragStart.rect ?? getRect() as DOMRect;
-
-    const total = dragStart.total || (horizontal.value ? rect.height : rect.width);
+    const total = totalDragAxisPixels;
     if (total <= 0) {
         return;
     }
 
     // How far have we moved since the drag started (in the axis that matters)?
-    const deltaPx = horizontal.value ? (e.clientY - dragStart.clientY) : (e.clientX - dragStart.clientX);
+    const deltaPx = horizontal.value ? (e.clientY - clientY) : (e.clientX - clientX);
     const deltaRatio = deltaPx / total;
-    let nextRatio = dragStart.ratio + deltaRatio;
+    let nextRatio = dragStartRatio + deltaRatio;
 
     const min = props.minPx;
 
@@ -114,6 +126,9 @@ function onPointerMove(e: PointerEvent) {
 
 
 function onPointerUp() {
+    dragHandleEl!.releasePointerCapture(pointerId!);
+    dragHandleEl = null;
+
     dragging.value = false;
     pointerId = null;
 
@@ -122,9 +137,6 @@ function onPointerUp() {
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerup", onPointerUp);
     window.removeEventListener("pointercancel", onPointerUp);
-
-    dragStart.rect = null;
-    dragStart.total = 0;
 }
 
 // Clean up in case component is destroyed mid-drag.
