@@ -9,15 +9,7 @@ const bitSize = ref(0);
 const valueFits = ref<Record<IntSize, boolean>>();
 
 function normalizeIntegerString(raw: string): string {
-    let s = raw.trim();
-    // remove any whitespace (incl NBSP)
-    s = s.replace(/[\s\u00A0]/g, '');
-    // keep digits; optionally keep a single leading minus
-    const isNeg = /^-/.test(s) || /^\u2212/.test(s); // '-' or Unicode '−'
-    const digits = s.replace(/\D/g, ''); // strips locale separators like , . ' _ etc.
-    // remove leading zeros but keep one zero if all zeros/empty
-    const normalized = digits.replace(/^0+(?=\d)/, '') || '0';
-    return isNeg && normalized !== '0' ? `-${normalized}` : normalized;
+    return raw.trim().replace(/(?<=\d)[\s\u00A0\u2009\u202F,.'’_]+(?=\d)/g, "");
 }
 
 watch(input, (value: string) => {
