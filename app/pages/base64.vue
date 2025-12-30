@@ -37,7 +37,6 @@ const FIRE_ICON_DELAY = 250;
 const invalidField = ref<'none' | 'base64' | 'raw'>('none');
 
 const base64 = ref('');
-const base64Invalid = ref(false);
 function decodeBase64ToText(): void {
     window.clearTimeout(fireIconTimerId);
     invalidField.value = 'none';
@@ -61,7 +60,6 @@ watch(base64Input, () => { // on mount not working idk why, maybe because of Cli
 });
 
 const rawtext = ref('');
-const rawtextInvalid = ref(false);
 function encodeTextToBase64(): void {
     window.clearTimeout(fireIconTimerId);
     invalidField.value = 'none';
@@ -100,6 +98,8 @@ function encodeTextToBase64(): void {
                             v-model="base64"
                             @input="decodeBase64ToText"
                             ref="base64Input"
+                            data-testid="base64-encoded-input"
+                            :aria-invalid="invalidField === 'base64'"
                         ></textarea>
                     </div>
                 </template>
@@ -111,6 +111,8 @@ function encodeTextToBase64(): void {
                             placeholder="Decoded data"
                             v-model="rawtext"
                             @input="encodeTextToBase64"
+                            data-testid="base64-decoded-input"
+                            :aria-invalid="invalidField === 'raw'"
                         ></textarea>
                     </div>
                 </template>

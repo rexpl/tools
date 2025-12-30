@@ -2,6 +2,7 @@
 type Option = {
     label: string;
     value: string | number;
+    dataTestId?: string;
 };
 
 const props = defineProps<{
@@ -41,6 +42,7 @@ function isSelected(value: Option["value"]) {
             ]"
             :aria-pressed="isSelected(option.value)"
             @click="select(option.value)"
+            :data-testid="option.dataTestId"
         >
             <span
                 v-if="isSelected(option.value)"

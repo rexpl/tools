@@ -1,6 +1,6 @@
 export default defineNitroPlugin((nitroApp) => {
     nitroApp.hooks.hook('render:html', (html) => {
-        html.head.push(`<script>(function () {
+        html.head.push(`<script data-testid="dark-mode-no-flash-script">(function () {
             const key = "theme";
             const saved = localStorage.getItem(key);
             

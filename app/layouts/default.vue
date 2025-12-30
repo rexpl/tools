@@ -118,7 +118,7 @@ useHead({
         </div>
     </aside>
 
-    <main class="p-4 ml-56">
+    <main class="p-4 ml-56" data-testid="__root__">
         <slot />
     </main>
 </template>

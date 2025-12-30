@@ -27,8 +27,8 @@ const rows = ref<SizeRow[]>(formatAllSizes(false));
 
 const localeAware = ref("locale");
 const localeAwareOptions = [
-    { label: "Locale Aware", value: "locale" },
-    { label: "Raw Number", value: "raw" },
+    { label: "Locale Aware", value: "locale", dataTestId: "int-size-table-format-locale" },
+    { label: "Raw Number", value: "raw", dataTestId: "int-size-table-format-raw" },
 ];
 
 onMounted(() => {
@@ -47,11 +47,11 @@ watch(localeAware, (value: string) => {
     <div class="w-[1050px]">
         <Table :headers="['Type', 'Min', 'Max']" >
             <TableRow v-for="r in rows" :key="r.label">
-                <TableCell :first="true">{{ r.label }}</TableCell>
-                <TableCell>
+                <TableCell :first="true" :data-testid="`int-size-table-cell-label-${r.size}`">{{ r.label }}</TableCell>
+                <TableCell :data-testid="`int-size-table-cell-min-${r.size}`">
                     <CopyValueOnclick :value="r.min">{{ r.min }}</CopyValueOnclick>
                 </TableCell>
-                <TableCell>
+                <TableCell :data-testid="`int-size-table-cell-max-${r.size}`">
                     <CopyValueOnclick :value="r.max">{{ r.max }}</CopyValueOnclick>
                 </TableCell>
             </TableRow>

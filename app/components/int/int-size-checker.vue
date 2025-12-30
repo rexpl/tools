@@ -55,10 +55,13 @@ onMounted(() => {
                 :class="validNumber ? 'border-gray-200 dark:border-gray-800 focus:ring-orange-600 focus:border-orange-600' : 'border-red-600 focus:ring-red-600'"
                 class="w-full max-w-xl px-3 py-2.5 bg-gray-100 dark:bg-gray-900 border text-heading text-sm rounded-md shadow-xs"
                 placeholder="Enter value here"
+                data-testid="int-size-input"
             >
-            <p v-if="!validNumber" class="mt-1.5 text-sm text-red-600">Please enter a valid integer.</p>
-            <p v-if="bitSize > 0" class="mt-1.5 text-sm">The entered value requires at least <span class="text-bold text-black dark:text-white">{{ bitSize }} bits</span>.</p>
-            <p v-if="bitSize === 0 && validNumber" class="mt-1.5 text-sm">Commas, dots and white spaces will be stripped for inspection.</p>
+            <p v-if="!validNumber" class="mt-1.5 text-sm text-red-600" data-testid="int-size-input-invalid-label">Please enter a valid integer.</p>
+            <p v-if="bitSize > 0" class="mt-1.5 text-sm" data-testid="int-size-input-valid-label">
+                The entered value requires at least <span class="text-bold text-black dark:text-white"><span data-testid="int-size-input-size">{{ bitSize }}</span> bits</span>.
+            </p>
+            <p v-if="bitSize === 0 && validNumber" class="mt-1.5 text-sm" data-testid="int-size-input-label">Commas, dots and white spaces will be stripped for inspection.</p>
         </div>
     </div>
 
