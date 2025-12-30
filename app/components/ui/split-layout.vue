@@ -126,6 +126,14 @@ function onPointerMove(e: PointerEvent) {
 
 
 function onPointerUp() {
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", onPointerUp);
+    window.removeEventListener("pointercancel", onPointerUp);
+
+    if (!dragging.value) {
+        return;
+    }
+
     dragHandleEl!.releasePointerCapture(pointerId!);
     dragHandleEl = null;
 
@@ -133,10 +141,6 @@ function onPointerUp() {
     pointerId = null;
 
     document.documentElement.style.cursor = "";
-
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", onPointerUp);
-    window.removeEventListener("pointercancel", onPointerUp);
 }
 
 // Clean up in case component is destroyed mid-drag.
