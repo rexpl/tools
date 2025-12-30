@@ -174,8 +174,11 @@ function saveSettings(): void {
 <template>
     <div
         ref="rootEl"
-        class="relative w-full h-full overflow-hidden select-none flex"
-        :class="horizontal ? 'flex-col' : 'flex-row'"
+        class="relative w-full h-full overflow-hidden flex"
+        :class="[
+            horizontal ? 'flex-col' : 'flex-row',
+            dragging ? 'select-none' : 'select-text'
+        ]"
         @pointerup="onPointerUp"
         @pointercancel="onPointerUp"
     >
