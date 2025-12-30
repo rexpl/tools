@@ -9,6 +9,4 @@ import ToolHeader from "~/components/tool-header.vue";
     </ToolHeader>
 
     WIP
-
-    some changes, somehow didn't work
 </template>
