@@ -176,7 +176,9 @@ function saveSettings(): void {
         @pointercancel="onPointerUp"
     >
         <div class="min-w-0 min-h-0 overflow-auto" :style="firstStyle">
-            <slot name="first" />
+            <div class="w-full h-full p-0.5">
+                <slot name="first" />
+            </div>
         </div>
 
         <div
@@ -198,7 +200,9 @@ function saveSettings(): void {
             class="min-w-0 min-h-0 overflow-auto flex-1"
             :style="secondStyle"
         >
-            <slot name="second" />
+            <div class="w-full h-full p-0.5">
+                <slot name="second" />
+            </div>
         </div>
 
         <div
