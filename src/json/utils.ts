@@ -27,7 +27,7 @@ export function toNode(data: any, key: Key | null): JsonDataNode|JsonDataBaseNod
 
 export function searchMatchesOnThisLevel(address: string[], lastMatch: number, key: Key | null): boolean {
     const keyToCheck = lastMatch + 1;
-    if (keyToCheck in address) {
+    if (keyToCheck < address.length) {
         if (typeof key === 'number') {
             key = key.toString();
         }
@@ -71,9 +71,9 @@ export function idiomatic(classes: string[], parent: HTMLElement | null = null):
 export function makeKey(parent: HTMLElement, key: Key | null): void {
     if (key !== null) {
         if (typeof key === 'string') {
-            span(['text-blue-700'], parent).innerHTML = `"${key}":`;
+            span(['text-blue-700'], parent).innerText = `"${key}":`;
         } else {
-            span(['text-purple-700'], parent).innerHTML = `${key.toString()}:`;
+            span(['text-purple-700'], parent).innerText = `${key.toString()}:`;
         }
     }
 }

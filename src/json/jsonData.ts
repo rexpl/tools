@@ -53,11 +53,12 @@ export class JsonData {
         this.events.destroy();
     }
 
+    // main entry point of the viewer
     static makeSafe(raw: string): JsonData | null {
         let data: unknown;
 
         try {
-            data = JSON.parse(raw.trim());
+            data = JSON.parse(raw);
         } catch (_) {
             return null;
         }

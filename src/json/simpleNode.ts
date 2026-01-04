@@ -117,6 +117,12 @@ export class SimpleNode<ParentKey extends Key> implements JsonDataNode<ParentKey
     }
 
     clearSearch(): void {
+        if (this.rendered && this.matchesInSearch) {
+            this.element.classList.remove(
+                IS_HIGHLIGHTED_CLASS, IS_NOT_HIGHLIGHTED_CLASS, ...HIGHLIGHT_BASE_CLASSES,
+            );
+        }
+
         this.highlighted = false;
         this.matchesInSearch = false;
     }

@@ -11,7 +11,6 @@ export class LazyObjectNode<
     private parent: JsonDataParentNode<ParentKey>;
     private keyInParent: ParentKey;
 
-    private readonly keysToIndex = new Map<NodeKey, number>();
     private readonly nodes: JsonDataNode<number>[];
 
     private isOpenedByUser: boolean = false;
@@ -45,10 +44,9 @@ export class LazyObjectNode<
         this.heights = new Array(nodes.size);
 
         let i = 0;
-        for (const [key, node] of nodes) {
+        for (const [, node] of nodes) {
             this.heights[i] = ROW_HEIGHT_PX;
             this.nodes[i] = node;
-            this.keysToIndex.set(key, i);
 
             node.boot(this, i);
             i++;
@@ -183,7 +181,7 @@ export class LazyObjectNode<
 
         // we remove unwanted nodes
         for (const index of this.mounted) {
-            if (index < start || index > end) {
+            if (index < start || index >= end) {
                 this.nodes[index]!.destroy();
                 this.mounted.delete(index);
             }
