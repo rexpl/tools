@@ -46,6 +46,13 @@ useHead({
     bodyAttrs: {
         class: 'bg-white text-gray-700 dark:bg-gray-950 dark:text-gray-100'
     },
+    script: [
+        {
+            src: 'https://kit.fontawesome.com/30258cf383.js',
+            crossorigin: 'anonymous',
+            referrerpolicy: 'no-referrer',
+        },
+    ],
     link: [
         {
             rel: 'icon', type: 'image/x-icon', href: faviconIco,

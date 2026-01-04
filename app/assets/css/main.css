@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+@source "../../../src/**/*.ts";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Floating Vue tooltip base */

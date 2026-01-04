@@ -24,4 +24,12 @@ export default defineNuxtConfig({
             assetsInlineLimit: 0,
         },
     },
+
+    typescript: {
+        tsConfig: {
+            compilerOptions: {
+                strictPropertyInitialization: false,
+            },
+        },
+    },
 })
