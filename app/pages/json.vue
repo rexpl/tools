@@ -110,6 +110,7 @@ function clear(): void {
                 <template #first>
                     <div
                         v-if="fileName !== null"
+                        data-testid="json-file-state"
                         class="flex items-center justify-center flex-col space-y-4 h-full rounded-md bg-gray-50 dark:bg-gray-900 border"
                         :class="jsonIsInvalid ? 'border-red-600 focus:ring-red-600' : 'border-gray-200 dark:border-gray-800'"
                     >
@@ -130,6 +131,7 @@ function clear(): void {
 
                     <div
                         v-else-if="jsonInputIsLarge"
+                        data-testid="json-large-input-state"
                         class="flex items-center justify-center flex-col space-y-4 h-full rounded-md bg-gray-50 dark:bg-gray-900 border"
                         :class="jsonIsInvalid ? 'border-red-600 focus:ring-red-600' : 'border-gray-200 dark:border-gray-800'"
                     >
@@ -170,9 +172,18 @@ function clear(): void {
                         </div>
                     </div>
 
-                    <JsonViewer v-else-if="showJsonViewer" :json="rawJson" @invalid="jsonIsInvalid = $event" />
+                    <JsonViewer
+                        v-else-if="showJsonViewer"
+                        data-testid="json-viewer"
+                        :json="rawJson"
+                        @invalid="jsonIsInvalid = $event"
+                    />
 
-                    <div v-else class="flex items-center justify-center flex-col space-y-4 h-full">
+                    <div
+                        v-else
+                        data-testid="json-empty-state"
+                        class="flex items-center justify-center flex-col space-y-4 h-full"
+                    >
                         <div class="flex flex-col items-center text-gray-600 dark:text-gray-300">
                             <span class="text-lg">No JSON to display</span>
                             <span class="text-xs text-gray-500 dark:text-gray-400">Paste JSON, drop a file, or choose one to get started.</span>

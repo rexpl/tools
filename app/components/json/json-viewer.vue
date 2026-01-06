@@ -198,6 +198,7 @@ onBeforeUnmount(() => {
                     type="text"
                     name="filter"
                     autocomplete="off"
+                    data-testid="json-viewer-search-input"
                     v-model="search"
                     @input="startSearching"
                     @keydown="onSearchKeydown"
