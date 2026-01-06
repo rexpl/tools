@@ -63,7 +63,10 @@ export class LazyObjectNode<
 
     render(parent: HTMLElement, events: Events, depth: number): void {
         this.baseOfNodeIsRendered = true;
-        this.rootElement = div([], parent);
+        this.rootElement = div([], parent, {
+            'data-json-node': 'virtual-object-node',
+            'data-json-object-type': this.isArray ? 'array' : 'object',
+        });
 
         const collapseButton = button(['flex', 'space-x-1', 'items-center', 'cursor-pointer'], this.rootElement);
         events.onClick(collapseButton, () => {
@@ -86,14 +89,13 @@ export class LazyObjectNode<
         );
         this.childRoot.style.height = `${this.totalHeightPx}px`;
 
-
         this.closingBraceOpen = div(['ms-4', 'hidden'], this.rootElement);
         this.closingBraceOpen.innerText = this.isArray ? ']' : '}';
 
         this.closingBraceClose = span([], collapseButton);
         this.closingBraceClose.innerText = this.isArray ? '... ]' : '... }';
 
-        if (this.isOpenedByUser) {
+        if (this.isOpen) {
             this.open(events, false, true);
         }
     }
@@ -147,7 +149,7 @@ export class LazyObjectNode<
     private performRendering(events: Events): void {
         const position = this.parent.getMyPositionInfo(this.keyInParent);
 
-        const viewportTop = Math.max(position.rootScrollTop, position.yourStartPosition);
+        const viewportTop = position.rootScrollTop - position.yourStartPosition;
         // might overshoot due to viewport top not 100% of the time being the top but is not a big problem
         const viewportBottom = viewportTop + position.rootViewportHeight;
 
@@ -241,6 +243,9 @@ export class LazyObjectNode<
         this.totalHeightPx -= oldHeight;
         this.heights[key] = newHeight;
         this.totalHeightPx += newHeight;
+        if (this.baseOfNodeIsRendered && this.isOpen) {
+            this.childRoot.style.height = `${this.totalHeightPx}px`;
+        }
 
         this.fenwickTree.add(key, newHeight - oldHeight);
 

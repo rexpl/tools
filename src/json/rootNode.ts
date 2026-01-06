@@ -42,7 +42,9 @@ export class RootNode implements JsonDataBaseNode, JsonDataParentNode<number> {
         this.parentElement = parent;
         this.events = events;
 
-        this.rootNode = div(['relative'], parent);
+        this.rootNode = div(['relative'], parent, {
+            'data-json-node': 'root',
+        });
         this.rootNode.style.height = `${this.totalHeightPx}px`;
 
         this.renderNode = div(['absolute', 'left-0', 'right-0', 'top-0', 'will-change-transform'], this.rootNode);
@@ -130,7 +132,7 @@ export class RootNode implements JsonDataBaseNode, JsonDataParentNode<number> {
     getMyPositionInfo(key: number): PositionInfo {
         return {
             rootViewportHeight: this.parentElement.clientHeight,
-            rootScrollTop: this.parentElement.scrollTop,
+            rootScrollTop: Math.floor(this.parentElement.scrollTop),
             yourStartPosition: this.fenwick.sum(key),
         };
     }

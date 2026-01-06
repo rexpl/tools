@@ -37,8 +37,8 @@ function scrollToMatch(i: number) {
 
     const y = target.getApproxScrollPosition();
 
-    const viewTop = scroller.scrollTop + 20;
-    const viewBottom = scroller.scrollTop + scroller.clientHeight - 20;
+    const viewTop = scroller.scrollTop + 100;
+    const viewBottom = scroller.scrollTop + scroller.clientHeight - 100;
 
     // already in viewport?
     if (y >= viewTop && y <= viewBottom) {

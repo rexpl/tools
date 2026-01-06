@@ -52,7 +52,10 @@ export class ObjectNode<
 
     render(parent: HTMLElement, events: Events, depth: number): void {
         this.baseOfNodeIsRendered = true;
-        this.rootElement = div([], parent);
+        this.rootElement = div([], parent, {
+            'data-json-node': 'object-node',
+            'data-json-object-type': this.isArray ? 'array' : 'object',
+        });
 
         const collapseButton = button(['flex', 'space-x-1', 'items-center', 'cursor-pointer'], this.rootElement);
         events.onClick(collapseButton, () => {

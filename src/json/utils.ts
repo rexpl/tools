@@ -39,8 +39,15 @@ export function searchMatchesOnThisLevel(address: string[], lastMatch: number, k
     return false;
 }
 
-function element<T extends HTMLElement>(type: string, classes: string[], parent: HTMLElement | null): T {
-    const e = document.createElement(type);
+type Attributes = Record<string, string>;
+
+function element<T extends HTMLElement>(
+    type: string,
+    classes: string[],
+    parent: HTMLElement | null,
+    attributes: Attributes,
+): T {
+    const e = document.createElement(type) as T;
 
     if (classes.length > 0) {
         e.classList.add(...classes);
@@ -48,24 +55,43 @@ function element<T extends HTMLElement>(type: string, classes: string[], parent:
     if (parent !== null) {
         parent.appendChild(e);
     }
+    for (const attribute in attributes) {
+        e.setAttribute(attribute, attributes[attribute]!);
+    }
 
-    return e as T;
+    return e;
 }
 
-export function div(classes: string[] = [], parent: HTMLElement | null = null): HTMLDivElement {
-    return element('div', classes, parent);
+export function div(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLDivElement {
+    return element('div', classes, parent, attributes);
 }
 
-export function span(classes: string[] = [], parent: HTMLElement | null = null): HTMLSpanElement {
-    return element('span', classes, parent);
+export function span(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLSpanElement {
+    return element('span', classes, parent, attributes);
 }
 
-export function button(classes: string[] = [], parent: HTMLElement | null = null): HTMLButtonElement {
-    return element('button', classes, parent);
+export function button(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLButtonElement {
+    return element('button', classes, parent, attributes);
 }
 
-export function idiomatic(classes: string[], parent: HTMLElement | null = null): HTMLElement {
-    return element('i', classes, parent);
+export function idiomatic(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLElement {
+    return element('i', classes, parent, attributes);
 }
 
 export function makeKey(parent: HTMLElement, key: Key | null): void {
