@@ -126,6 +126,14 @@ function onPointerMove(e: PointerEvent) {
 
 
 function onPointerUp() {
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", onPointerUp);
+    window.removeEventListener("pointercancel", onPointerUp);
+
+    if (!dragging.value) {
+        return;
+    }
+
     dragHandleEl!.releasePointerCapture(pointerId!);
     dragHandleEl = null;
 
@@ -133,10 +141,6 @@ function onPointerUp() {
     pointerId = null;
 
     document.documentElement.style.cursor = "";
-
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", onPointerUp);
-    window.removeEventListener("pointercancel", onPointerUp);
 }
 
 // Clean up in case component is destroyed mid-drag.
@@ -170,13 +174,18 @@ function saveSettings(): void {
 <template>
     <div
         ref="rootEl"
-        class="relative w-full h-full overflow-hidden select-none flex"
-        :class="horizontal ? 'flex-col' : 'flex-row'"
+        class="relative w-full h-full overflow-hidden flex"
+        :class="[
+            horizontal ? 'flex-col' : 'flex-row',
+            dragging ? 'select-none' : 'select-text'
+        ]"
         @pointerup="onPointerUp"
         @pointercancel="onPointerUp"
     >
         <div class="min-w-0 min-h-0 overflow-auto" :style="firstStyle">
-            <slot name="first" />
+            <div class="w-full h-full p-0.5">
+                <slot name="first" />
+            </div>
         </div>
 
         <div
@@ -198,7 +207,9 @@ function saveSettings(): void {
             class="min-w-0 min-h-0 overflow-auto flex-1"
             :style="secondStyle"
         >
-            <slot name="second" />
+            <div class="w-full h-full p-0.5">
+                <slot name="second" />
+            </div>
         </div>
 
         <div

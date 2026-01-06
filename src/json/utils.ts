@@ -1,0 +1,105 @@
+import type {JsonDataBaseNode, JsonDataNode, Key} from "./nodes";
+import {SimpleNode, SimpleType} from "./simpleNode";
+import {ObjectNode} from "./objectNode";
+
+export function toNode(data: any, key: null): JsonDataBaseNode;
+export function toNode(data: any, key: Key): JsonDataNode;
+export function toNode(data: any, key: Key | null): JsonDataNode|JsonDataBaseNode {
+    switch (typeof data) {
+        case "string":
+            return new SimpleNode(data, SimpleType.String, key);
+        case "number":
+            return new SimpleNode(data.toString(), SimpleType.Number, key);
+        case "object":
+            if (data === null) {
+                return new SimpleNode('null', SimpleType.Null, key);
+            } else if (Array.isArray(data)) {
+                return ObjectNode.fromArray(data, key);
+            } else {
+                return ObjectNode.fromObject(data, key);
+            }
+        case "boolean":
+            return new SimpleNode(data ? 'true' : 'false', SimpleType.Boolean, key);
+        default:
+            throw new Error(`Unsupported json data type: "${typeof data}"`);
+    }
+}
+
+export function searchMatchesOnThisLevel(address: string[], lastMatch: number, key: Key | null): boolean {
+    const keyToCheck = lastMatch + 1;
+    if (keyToCheck < address.length) {
+        if (typeof key === 'number') {
+            key = key.toString();
+        }
+
+        const thisNodePossibleAddress = address[keyToCheck];
+        return thisNodePossibleAddress === '*' || thisNodePossibleAddress === key;
+    }
+
+    return false;
+}
+
+type Attributes = Record<string, string>;
+
+function element<T extends HTMLElement>(
+    type: string,
+    classes: string[],
+    parent: HTMLElement | null,
+    attributes: Attributes,
+): T {
+    const e = document.createElement(type) as T;
+
+    if (classes.length > 0) {
+        e.classList.add(...classes);
+    }
+    if (parent !== null) {
+        parent.appendChild(e);
+    }
+    for (const attribute in attributes) {
+        e.setAttribute(attribute, attributes[attribute]!);
+    }
+
+    return e;
+}
+
+export function div(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLDivElement {
+    return element('div', classes, parent, attributes);
+}
+
+export function span(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLSpanElement {
+    return element('span', classes, parent, attributes);
+}
+
+export function button(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLButtonElement {
+    return element('button', classes, parent, attributes);
+}
+
+export function idiomatic(
+    classes: string[] = [],
+    parent: HTMLElement | null = null,
+    attributes: Attributes = {},
+): HTMLElement {
+    return element('i', classes, parent, attributes);
+}
+
+export function makeKey(parent: HTMLElement, key: Key | null): void {
+    if (key !== null) {
+        if (typeof key === 'string') {
+            span(['text-blue-700'], parent).innerText = `"${key}":`;
+        } else {
+            span(['text-purple-700'], parent).innerText = `${key.toString()}:`;
+        }
+    }
+}

@@ -6,6 +6,7 @@ import {watch, ref} from "vue";
 import {baseUrl, makeTitle} from "~~/src/constants";
 import logo from "~/assets/img/logo.png";
 import {error} from "~~/src/toasts";
+import FullHeightContainer from "~/components/ui/full-height-container.vue";
 
 const title = 'Base 64';
 const description = 'Provides basic base 64 encoding/decoding with live editing.';
@@ -87,37 +88,33 @@ function encodeTextToBase64(): void {
 
     <!-- without this causes hydration mismatches as the split layout uses local storage unavailable at build -->
     <ClientOnly>
-        <div class="w-full h-[calc(100vh-137px)]">
+        <FullHeightContainer>
             <SplitLayout local-storage="layout:base64" :initial-ratio="0.40">
                 <template #first>
-                    <div class="w-full h-full p-0.5">
-                        <textarea
-                            class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
-                            :class="invalidField === 'base64' ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
-                            placeholder="Base 64 data"
-                            v-model="base64"
-                            @input="decodeBase64ToText"
-                            ref="base64Input"
-                            data-testid="base64-encoded-input"
-                            :aria-invalid="invalidField === 'base64'"
-                        ></textarea>
-                    </div>
+                    <textarea
+                        class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
+                        :class="invalidField === 'base64' ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
+                        placeholder="Base 64 data"
+                        v-model="base64"
+                        @input="decodeBase64ToText"
+                        ref="base64Input"
+                        data-testid="base64-encoded-input"
+                        :aria-invalid="invalidField === 'base64'"
+                    ></textarea>
                 </template>
                 <template #second>
-                    <div class="w-full h-full p-0.5">
-                        <textarea
-                            class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
-                            :class="invalidField === 'raw' ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
-                            placeholder="Decoded data"
-                            v-model="rawtext"
-                            @input="encodeTextToBase64"
-                            data-testid="base64-decoded-input"
-                            :aria-invalid="invalidField === 'raw'"
-                        ></textarea>
-                    </div>
+                    <textarea
+                        class="bg-gray-100 dark:bg-gray-900 border text-sm rounded-md  block w-full h-full p-3 shadow-xs"
+                        :class="invalidField === 'raw' ? 'border-red-600 focus:ring-red-600' : 'focus:ring-orange-600 focus:border-orange-600 border-gray-200 dark:border-gray-800'"
+                        placeholder="Decoded data"
+                        v-model="rawtext"
+                        @input="encodeTextToBase64"
+                        data-testid="base64-decoded-input"
+                        :aria-invalid="invalidField === 'raw'"
+                    ></textarea>
                 </template>
             </SplitLayout>
-        </div>
+        </FullHeightContainer>
     </ClientOnly>
 </template>
 

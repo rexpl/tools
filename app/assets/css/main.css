@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+@source "../../../src/**/*.ts";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Floating Vue tooltip base */
@@ -28,4 +30,14 @@
 /* Arrow border */
 .v-popper--theme-tooltip .v-popper__arrow-outer {
     @apply border border-slate-200 dark:border-slate-700;
+}
+
+.json-viewer-caret {
+    width: 0.5rem;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 6px solid currentColor;
+    transition: transform 120ms ease;
+    transform-origin: 25% 50%;
 }
