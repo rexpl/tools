@@ -216,7 +216,11 @@ onBeforeUnmount(() => {
                         :disabled="matches.length === 0"
                         @click="prevMatch"
                         title="Previous (Arrow Up)"
-                    ><i class="fa-solid fa-angle-up fa-sm"></i></button>
+                    >
+                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 15 7-7 7 7"/>
+                        </svg>
+                    </button>
 
                     <button
                         type="button"
@@ -224,7 +228,11 @@ onBeforeUnmount(() => {
                         :disabled="matches.length === 0"
                         @click="nextMatch"
                         title="Next (Arrow Down)"
-                    ><i class="fa-solid fa-angle-down fa-sm"></i></button>
+                    >
+                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>

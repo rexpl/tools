@@ -1,7 +1,7 @@
 import type {JsonDataNode, JsonDataParentNode, Key, PositionInfo, SearchResult} from "./nodes";
 import {ROW_HEIGHT_PX, LAZY_RENDERING_OVERSCAN_PX} from "./nodes";
 import type {Events} from "./events";
-import {button, div, idiomatic, span, makeKey, searchMatchesOnThisLevel} from "./utils";
+import {button, div, span, makeKey, searchMatchesOnThisLevel} from "./utils";
 import {FenwickTree} from "./fenwickTree";
 
 export class LazyObjectNode<
@@ -77,7 +77,7 @@ export class LazyObjectNode<
             }
         });
 
-        this.caret = idiomatic(['fa-solid', 'fa-caret-right', 'w-3!', 'text-gray-400'], collapseButton,);
+        this.caret = span(['json-viewer-caret', 'ps-1', 'text-gray-400'], collapseButton);
 
         makeKey(collapseButton, this.key);
         span([], collapseButton).innerText = this.isArray ? '[' : '{';
