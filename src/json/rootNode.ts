@@ -22,7 +22,7 @@ export class RootNode implements JsonDataBaseNode, JsonDataParentNode<number> {
     private renderedEnd = 0;
     private mounted = new Set<number>();
 
-    constructor(nodes: Map<Key, JsonDataNode>) {
+    constructor(nodes: Map<Key, JsonDataNode>, private readonly isArray: boolean) {
         this.nodes = new Array(nodes.size);
         this.heights = new Array(nodes.size);
 
@@ -43,7 +43,8 @@ export class RootNode implements JsonDataBaseNode, JsonDataParentNode<number> {
         this.events = events;
 
         this.rootNode = div(['relative'], parent, {
-            'data-json-node': 'root',
+            'data-json-node': 'root-node',
+            'data-json-object-type': this.isArray ? 'array' : 'object',
         });
         this.rootNode.style.height = `${this.totalHeightPx}px`;
 

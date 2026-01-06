@@ -64,7 +64,7 @@ export class LazyObjectNode<
     render(parent: HTMLElement, events: Events, depth: number): void {
         this.baseOfNodeIsRendered = true;
         this.rootElement = div([], parent, {
-            'data-json-node': 'virtual-object-node',
+            'data-json-node': 'lazy-object-node',
             'data-json-object-type': this.isArray ? 'array' : 'object',
         });
 

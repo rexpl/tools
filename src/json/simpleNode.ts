@@ -35,26 +35,38 @@ export class SimpleNode<ParentKey extends Key> implements JsonDataNode<ParentKey
 
     render(parent: HTMLElement) {
         this.rendered = true;
-        const root = div(['flex', 'space-x-1', 'ms-4'], parent);
+        const root = div(['flex', 'space-x-1', 'ms-4'], parent, {
+            'data-json-node': 'value-node',
+        });
         makeKey(root, this.key);
 
         switch (this.type) {
             case SimpleType.String:
+                root.setAttribute('data-json-value-type', 'string');
+
                 this.element = span(['text-green-700', 'truncate', 'text-nowrap'], root);
                 this.element.innerText = `"${this.value.replace(/\r?\n/g, '\\n')}"`;
                 break;
+
             case SimpleType.Null:
             case SimpleType.Boolean:
+                const type = this.type === SimpleType.Null ? 'null' : 'boolean';
+                root.setAttribute('data-json-value-type', type);
+
                 this.element = span(['text-orange-700'], root);
                 this.element.innerText = this.value;
                 break;
+
             case SimpleType.Number:
+                root.setAttribute('data-json-value-type', 'number');
+
                 this.element = span(['text-cyan-700'], root);
                 this.element.innerText = this.value;
                 break;
         }
 
         if (this.matchesInSearch) {
+            root.setAttribute('data-json-search', 'match');
             this.element.classList.add(
                 this.highlighted ? IS_HIGHLIGHTED_CLASS : IS_NOT_HIGHLIGHTED_CLASS,
                 ...HIGHLIGHT_BASE_CLASSES,
@@ -102,11 +114,13 @@ export class SimpleNode<ParentKey extends Key> implements JsonDataNode<ParentKey
 
         if (this.rendered) {
             if (this.matchesInSearch) {
+                this.element.parentElement!.setAttribute('data-json-search', 'match');
                 this.element.classList.add(
                     this.highlighted ? IS_HIGHLIGHTED_CLASS : IS_NOT_HIGHLIGHTED_CLASS,
                     ...HIGHLIGHT_BASE_CLASSES,
                 );
             } else {
+                this.element.parentElement!.removeAttribute('data-json-search');
                 this.element.classList.remove(
                     IS_HIGHLIGHTED_CLASS, IS_NOT_HIGHLIGHTED_CLASS, ...HIGHLIGHT_BASE_CLASSES,
                 );
@@ -118,6 +132,7 @@ export class SimpleNode<ParentKey extends Key> implements JsonDataNode<ParentKey
 
     clearSearch(): void {
         if (this.rendered && this.matchesInSearch) {
+            this.element.parentElement!.removeAttribute('data-json-search');
             this.element.classList.remove(
                 IS_HIGHLIGHTED_CLASS, IS_NOT_HIGHLIGHTED_CLASS, ...HIGHLIGHT_BASE_CLASSES,
             );

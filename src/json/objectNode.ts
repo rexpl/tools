@@ -263,7 +263,7 @@ export class ObjectNode<
         }
 
         if (key === null) {
-            return new RootNode(nodes);
+            return new RootNode(nodes, true);
         }
 
         return nodes.size > NODE_CAN_BENEFIT_FROM_LAZY_RENDERING
@@ -279,7 +279,7 @@ export class ObjectNode<
         }
 
         if (key === null) {
-            return new RootNode(nodes);
+            return new RootNode(nodes, false);
         }
 
         return nodes.size > NODE_CAN_BENEFIT_FROM_LAZY_RENDERING
