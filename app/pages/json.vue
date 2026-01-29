@@ -5,6 +5,32 @@ import FullHeightContainer from "~/components/ui/full-height-container.vue";
 import SplitLayout from "~/components/ui/split-layout.vue";
 import {ref, onMounted, nextTick} from "vue";
 import {error} from "~~/src/toasts";
+import {baseUrl, makeTitle} from "~~/src/constants";
+import logo from "~/assets/img/logo.png";
+
+const title = 'JSON';
+const description = 'Provides JSON decoding with structured viewing and search functionality.';
+
+const pageTitle = makeTitle(title);
+useSeoMeta({
+    title: pageTitle,
+});
+
+if (import.meta.server) {
+    useSeoMeta({
+        description: description,
+        ogTitle: pageTitle,
+        ogDescription: description,
+        ogImage: baseUrl(logo),
+        ogUrl: baseUrl(`/json`),
+        ogType: 'website',
+        ogSiteName: pageTitle,
+        twitterCard: 'summary_large_image',
+        twitterTitle: pageTitle,
+        twitterDescription: description,
+        twitterImage: baseUrl(logo),
+    });
+}
 
 const jsonInput = ref<HTMLTextAreaElement>();
 const fileInput = ref<HTMLInputElement>();
